@@ -1,0 +1,1298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101719">
+  <meta name="description" content="SupplySight interactive inventory management product concept by Naja Gardner.">
+  <title>SupplySight | Interactive Product Prototype</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #101719;
+      --sidebar: #131f22;
+      --panel: #1a292d;
+      --panel-alt: #213439;
+      --border: #344b50;
+      --text: #f4f8f8;
+      --muted: #a8bfc2;
+      --teal: #55dfcc;
+      --teal-dark: #123b38;
+      --amber: #ffd087;
+      --red: #ffaaa4;
+      --green: #8de6b8;
+      --font: "DM Sans", sans-serif;
+      --heading: "Space Grotesk", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: var(--font);
+      line-height: 1.5;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+
+    :is(button, a, input, select, textarea):focus-visible {
+      outline: 3px solid var(--teal);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      top: -100px;
+      left: 16px;
+      z-index: 100;
+      padding: 12px;
+      color: #101719;
+      background: var(--teal);
+    }
+
+    .skip:focus { top: 12px; }
+
+    .layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      padding: 27px 17px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+    }
+
+    .brand {
+      margin: 0 10px 40px;
+      font: 700 1.65rem var(--heading);
+      letter-spacing: -.06em;
+    }
+
+    .brand span { color: var(--teal); }
+
+    .nav-label {
+      margin: 0 12px 12px;
+      color: var(--muted);
+      font-size: .67rem;
+      font-weight: 700;
+      letter-spacing: .13em;
+    }
+
+    .nav-btn {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 7px;
+      padding: 13px 14px;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .nav-btn.active {
+      color: var(--teal);
+      background: var(--teal-dark);
+      border-color: #2d6d65;
+    }
+
+    .nav-btn:hover:not(.active) {
+      color: white;
+      background: var(--panel-alt);
+    }
+
+    .sidebar-foot {
+      margin: 45px 10px 0;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    .sidebar-foot a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 28px clamp(18px, 4vw, 60px) 60px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .concept-tag {
+      color: var(--teal);
+      border: 1px solid #39766e;
+      border-radius: 30px;
+      padding: 6px 11px;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+
+    .page-header { margin: 36px 0 26px; }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--heading);
+      line-height: 1.15;
+      letter-spacing: -.035em;
+    }
+
+    h1 {
+      margin: 9px 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    h2 { font-size: 1.3rem; }
+    h3 { font-size: 1.03rem; }
+    .subtext, .muted { color: var(--muted); }
+    .subtext { max-width: 700px; margin: 0; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 28px 0;
+    }
+
+    .card, .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .stat { padding: 22px; }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      display: block;
+      margin: 12px 0 5px;
+      font: 600 clamp(1.8rem, 3vw, 2.5rem) var(--heading);
+    }
+
+    .stat-foot {
+      color: var(--teal);
+      font-size: .75rem;
+    }
+
+    .card { padding: 24px; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 { margin: 0; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 16px;
+      background: var(--teal);
+      color: #082421;
+      border: 1px solid var(--teal);
+      border-radius: 7px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .btn:hover { background: #8df3e4; }
+
+    .btn-secondary {
+      color: var(--text);
+      background: transparent;
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover { background: var(--panel-alt); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--red);
+      border-color: #8d5550;
+    }
+
+    .btn-danger:hover { background: #4d2a2a; }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin: 26px 0;
+    }
+
+    .storage-label {
+      color: var(--muted);
+      font-size: .77rem;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 660px;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      padding: 12px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    td {
+      padding: 16px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: .87rem;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .item-name { font-weight: 700; }
+
+    .item-id {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .74rem;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 30px;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+
+    .high { background: #55312e; color: var(--red); }
+    .medium { background: #51422e; color: var(--amber); }
+    .low, .resolved { background: #1c4439; color: var(--green); }
+    .open { background: #284750; color: #b5eaf6; }
+    .review { background: #4c402c; color: var(--amber); }
+
+    .link-button {
+      padding: 7px 0;
+      background: transparent;
+      border: none;
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 25px 0;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    label {
+      font-size: .78rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 12px;
+      color: var(--text);
+      background: #102023;
+      border: 1px solid #52676c;
+      border-radius: 7px;
+    }
+
+    textarea { min-height: 115px; resize: vertical; }
+
+    input::placeholder, textarea::placeholder {
+      color: #a4b8bb;
+    }
+
+    option { background: var(--bg); color: var(--text); }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .detail-grid .card h2 { margin-top: 0; }
+
+    .detail-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .detail-label {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: .76rem;
+    }
+
+    .detail-value {
+      margin: 0;
+      font-size: .97rem;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .note-list {
+      padding-left: 20px;
+      overflow-wrap: anywhere;
+    }
+
+    .note-list li {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .note-list p {
+      color: var(--text);
+      margin: 5px 0 0;
+      white-space: pre-wrap;
+    }
+
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .notice {
+      margin-top: 20px;
+      padding: 15px 18px;
+      color: var(--muted);
+      background: #17292c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: .8rem;
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin-top: 15px;
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .back-button { margin-top: 25px; }
+
+    .empty {
+      text-align: center;
+      padding: 35px;
+      color: var(--muted);
+    }
+
+    dialog {
+      width: min(90%, 450px);
+      padding: 28px;
+      color: var(--text);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, .75);
+    }
+
+    dialog h2 { margin-top: 0; }
+    dialog p { color: var(--muted); }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    @media (max-width: 950px) {
+      .layout { grid-template-columns: 1fr; }
+
+      .sidebar {
+        padding: 16px 20px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .brand { margin: 0 0 15px; }
+      .nav-label, .sidebar-foot { display: none; }
+      .sidebar nav { display: flex; gap: 8px; }
+      .nav-btn { width: auto; margin: 0; }
+      .main { padding-top: 20px; }
+    }
+
+    @media (max-width: 650px) {
+      .stats, .detail-grid { grid-template-columns: 1fr; }
+      .detail-list { grid-template-columns: 1fr 1fr; }
+      .section-head { align-items: flex-start; }
+      .controls { flex-direction: column; }
+      .field { width: 100%; }
+      .card { padding: 18px; }
+      .topbar { flex-wrap: wrap; }
+      .nav-btn { font-size: .78rem; padding: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#main" class="skip">Skip to main content</a>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">SupplySight<span>.</span></div>
+      <p class="nav-label">WORKSPACE</p>
+
+      <nav aria-label="Product navigation">
+        <button type="button" class="nav-btn active"
+          id="overviewBtn" aria-current="page">
+          ◫ Overview
+        </button>
+        <button type="button" class="nav-btn" id="exceptionsBtn">
+          ☷ Exceptions
+        </button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <p>Independent product concept using fictional sample data.</p>
+        <a href="../index.html">← Back to Portfolio</a>
+      </div>
+    </aside>
+
+    <main id="main" class="main" tabindex="-1">
+      <div class="topbar">
+        <span>SUPPLY CHAIN OPERATIONS / DEMO WORKSPACE</span>
+        <span class="concept-tag">INTERACTIVE PROTOTYPE V2</span>
+      </div>
+
+      <div class="toolbar">
+        <span class="storage-label" id="storageLabel">
+          Checking browser storage...
+        </span>
+        <button type="button" id="resetBtn"
+          class="btn btn-danger">
+          ↺ Reset Demo
+        </button>
+      </div>
+
+      <div id="app"></div>
+
+      <p id="announcement" role="status"
+        aria-live="polite" class="feedback"></p>
+
+      <div class="notice" id="storageNotice">
+        SupplySight uses fictional records for demonstration only.
+      </div>
+    </main>
+  </div>
+
+  <dialog id="resetDialog" aria-labelledby="resetTitle">
+    <h2 id="resetTitle">Reset SupplySight?</h2>
+    <p>
+      This will restore all original fictional records,
+      remove your saved investigation notes, and reset
+      every issue status.
+    </p>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary"
+        id="cancelResetBtn">Cancel</button>
+      <button type="button" class="btn btn-danger"
+        id="confirmResetBtn">Yes, Reset Demo</button>
+    </div>
+  </dialog>
+
+  <script>
+    "use strict";
+
+    const STORAGE_KEY = "supplysight-demo-v2";
+
+    // Fictional sample data.
+    const initialRecords = [
+      {
+        id: "EX-1042", item: "Medical Supply Kit",
+        sku: "MED-204", location: "Warehouse A",
+        expected: 120, actual: 96,
+        priority: "High", status: "Open", notes: []
+      },
+      {
+        id: "EX-1043", item: "Network Adapter",
+        sku: "NET-118", location: "Warehouse B",
+        expected: 250, actual: 239,
+        priority: "Medium", status: "Open", notes: []
+      },
+      {
+        id: "EX-1044", item: "Safety Equipment",
+        sku: "SAF-310", location: "Warehouse A",
+        expected: 85, actual: 81,
+        priority: "Low", status: "Under Review", notes: []
+      },
+      {
+        id: "EX-1045", item: "Power Supply Unit",
+        sku: "PWR-502", location: "Warehouse C",
+        expected: 75, actual: 60,
+        priority: "High", status: "Open", notes: []
+      },
+      {
+        id: "EX-1046", item: "Storage Module",
+        sku: "STO-113", location: "Warehouse B",
+        expected: 340, actual: 320,
+        priority: "Medium", status: "Resolved",
+        notes: ["Sample record: reconciliation completed."]
+      },
+      {
+        id: "EX-1047", item: "Protective Gloves",
+        sku: "SAF-424", location: "Warehouse C",
+        expected: 500, actual: 470,
+        priority: "Medium", status: "Under Review",
+        notes: []
+      }
+    ];
+
+    const app = document.getElementById("app");
+    const announcement = document.getElementById("announcement");
+    const overviewBtn = document.getElementById("overviewBtn");
+    const exceptionsBtn = document.getElementById("exceptionsBtn");
+    const storageLabel = document.getElementById("storageLabel");
+    const storageNotice = document.getElementById("storageNotice");
+    const resetDialog = document.getElementById("resetDialog");
+
+    let records = [];
+    let currentView = "overview";
+    let selectedId = null;
+    let searchTerm = "";
+    let priorityFilter = "All";
+    let statusFilter = "All";
+    let persistenceAvailable = false;
+
+    function cloneInitialRecords() {
+      return JSON.parse(JSON.stringify(initialRecords));
+    }
+
+    function checkStorage() {
+      try {
+        const testKey = STORAGE_KEY + "-test";
+        localStorage.setItem(testKey, "ok");
+        localStorage.removeItem(testKey);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function validSavedRecords(data) {
+      if (!Array.isArray(data) ||
+          data.length !== initialRecords.length) {
+        return false;
+      }
+
+      return initialRecords.every(original => {
+        const item = data.find(r => r && r.id === original.id);
+
+        return item &&
+          item.item === original.item &&
+          item.sku === original.sku &&
+          item.location === original.location &&
+          item.expected === original.expected &&
+          item.actual === original.actual &&
+          item.priority === original.priority &&
+          ["Open", "Under Review", "Resolved"].includes(item.status) &&
+          Array.isArray(item.notes) &&
+          item.notes.every(note => typeof note === "string");
+      });
+    }
+
+    function loadRecords() {
+      persistenceAvailable = checkStorage();
+
+      if (persistenceAvailable) {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+
+          if (saved) {
+            const parsed = JSON.parse(saved);
+
+            if (validSavedRecords(parsed)) {
+              records = initialRecords.map(original =>
+                parsed.find(r => r.id === original.id)
+              );
+              return;
+            }
+          }
+        } catch {
+          // Fall back to original sample records.
+        }
+      }
+
+      records = cloneInitialRecords();
+    }
+
+    function updateStorageMessage() {
+      if (persistenceAvailable) {
+        storageLabel.textContent =
+          "Demo changes saved in this browser";
+
+        storageNotice.textContent =
+          "All records are fictional. Investigation notes and " +
+          "status changes are saved locally in this browser. " +
+          "They are not shared with other users or devices. " +
+          "Use Reset Demo to restore the original data.";
+      } else {
+        storageLabel.textContent =
+          "Temporary session only";
+
+        storageNotice.textContent =
+          "Browser storage is unavailable. Changes may be lost " +
+          "when this page is refreshed. For full functionality, " +
+          "open the project through a local web server or " +
+          "GitHub Pages in a browser that allows local storage.";
+      }
+    }
+
+    function saveRecords() {
+      if (!persistenceAvailable) return;
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      } catch {
+        persistenceAvailable = false;
+        updateStorageMessage();
+        setAnnouncement(
+          "Your changes were made for this session, " +
+          "but browser storage is unavailable."
+        );
+      }
+    }
+
+    function resetRecords() {
+      records = cloneInitialRecords();
+
+      if (persistenceAvailable) {
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          persistenceAvailable = false;
+        }
+      }
+
+      searchTerm = "";
+      priorityFilter = "All";
+      statusFilter = "All";
+
+      resetDialog.close();
+      updateStorageMessage();
+      navigate("overview");
+      setAnnouncement("Demo reset. Original sample records restored.");
+    }
+
+    function setAnnouncement(message) {
+      announcement.textContent = message;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[ch]);
+    }
+
+    function badge(label) {
+      const classes = {
+        High: "high", Medium: "medium", Low: "low",
+        Open: "open", "Under Review": "review",
+        Resolved: "resolved"
+      };
+
+      return `<span class="status ${classes[label] || ""}">
+        ${escapeHtml(label)}
+      </span>`;
+    }
+
+    function discrepancy(record) {
+      return record.actual - record.expected;
+    }
+
+    function getCounts() {
+      return {
+        open: records.filter(r => r.status !== "Resolved").length,
+        high: records.filter(
+          r => r.priority === "High" &&
+            r.status !== "Resolved"
+        ).length,
+        resolved: records.filter(
+          r => r.status === "Resolved"
+        ).length
+      };
+    }
+
+    function tableRows(items) {
+      if (!items.length) {
+        return `<tr><td colspan="6" class="empty">
+          No matching exceptions found.
+        </td></tr>`;
+      }
+
+      return items.map(record => `
+        <tr>
+          <td>
+            <span class="item-name">${escapeHtml(record.item)}</span>
+            <span class="item-id">${escapeHtml(record.id)}</span>
+          </td>
+          <td>${escapeHtml(record.location)}</td>
+          <td>${discrepancy(record)}</td>
+          <td>${badge(record.priority)}</td>
+          <td>${badge(record.status)}</td>
+          <td>
+            <button class="link-button" type="button"
+              data-open="${escapeHtml(record.id)}"
+              aria-label="Review ${escapeHtml(record.id)}">
+              Review →
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function makeTable(items) {
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Location</th>
+                <th scope="col">Variance</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>${tableRows(items)}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderOverview() {
+      const counts = getCounts();
+
+      app.innerHTML = `
+        <header class="page-header">
+          <p class="eyebrow">Inventory Intelligence</p>
+          <h1>Operations Overview</h1>
+          <p class="subtext">
+            Monitor inventory discrepancies and prioritize
+            issues that require attention.
+          </p>
+        </header>
+
+        <section class="stats" aria-label="Exception summary">
+          <div class="stat">
+            <span class="stat-label">
+              Tracked Exception Records
+            </span>
+            <strong class="stat-value">${records.length}</strong>
+            <span class="stat-foot">Fictional records</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">
+              Unresolved Exceptions
+            </span>
+            <strong class="stat-value">${counts.open}</strong>
+            <span class="stat-foot">Open or under review</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">
+              High Priority Unresolved
+            </span>
+            <strong class="stat-value">${counts.high}</strong>
+            <span class="stat-foot">Requires investigation</span>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="priorityHeading">
+          <div class="section-head">
+            <h2 id="priorityHeading">Priority Exceptions</h2>
+            <button class="btn btn-secondary"
+              id="viewAllBtn" type="button">
+              View All Exceptions →
+            </button>
+          </div>
+          ${makeTable(
+            records.filter(r => r.status !== "Resolved")
+              .slice(0, 4)
+          )}
+        </section>
+      `;
+    }
+
+    function renderExceptions() {
+      app.innerHTML = `
+        <header class="page-header">
+          <p class="eyebrow">Exception Management</p>
+          <h1>Inventory Exceptions</h1>
+          <p class="subtext">
+            Search, prioritize, and investigate discrepancies.
+          </p>
+        </header>
+
+        <div class="controls">
+          <div class="field" style="flex:2">
+            <label for="searchInput">Search records</label>
+            <input id="searchInput" type="search"
+              placeholder="Search item, SKU, or exception ID"
+              value="${escapeHtml(searchTerm)}">
+          </div>
+
+          <div class="field">
+            <label for="prioritySelect">Priority</label>
+            <select id="prioritySelect">
+              <option>All</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="statusSelect">Status</label>
+            <select id="statusSelect">
+              <option>All</option>
+              <option>Open</option>
+              <option>Under Review</option>
+              <option>Resolved</option>
+            </select>
+          </div>
+        </div>
+
+        <section class="card" aria-labelledby="recordsHeading">
+          <div class="section-head">
+            <h2 id="recordsHeading">Exception Records</h2>
+            <span class="muted" id="resultCount"></span>
+          </div>
+          <div id="recordsTable"></div>
+        </section>
+      `;
+
+      document.getElementById("prioritySelect").value =
+        priorityFilter;
+      document.getElementById("statusSelect").value =
+        statusFilter;
+
+      updateFilteredTable();
+    }
+
+    function getFilteredRecords() {
+      return records.filter(record => {
+        const text = (
+          record.item + " " + record.sku + " " + record.id
+        ).toLowerCase();
+
+        return text.includes(searchTerm.toLowerCase()) &&
+          (priorityFilter === "All" ||
+            record.priority === priorityFilter) &&
+          (statusFilter === "All" ||
+            record.status === statusFilter);
+      });
+    }
+
+    function updateFilteredTable() {
+      const filtered = getFilteredRecords();
+      const table = document.getElementById("recordsTable");
+
+      if (!table) return;
+
+      table.innerHTML = makeTable(filtered);
+      document.getElementById("resultCount").textContent =
+        `${filtered.length} of ${records.length} records`;
+    }
+
+    function renderHistory(record) {
+      const history = document.getElementById("historyList");
+
+      if (!record.notes.length) {
+        history.innerHTML =
+          `<p class="muted">No actions documented yet.</p>`;
+        return;
+      }
+
+      const list = document.createElement("ol");
+      list.className = "note-list";
+
+      record.notes.forEach((note, index) => {
+        const li = document.createElement("li");
+        const heading = document.createElement("strong");
+        const p = document.createElement("p");
+
+        heading.textContent = `Entry ${index + 1}`;
+        p.textContent = note;
+
+        li.append(heading, p);
+        list.appendChild(li);
+      });
+
+      history.replaceChildren(list);
+    }
+
+    function renderDetail() {
+      const record = records.find(r => r.id === selectedId);
+
+      if (!record) {
+        navigate("exceptions");
+        return;
+      }
+
+      const isResolved = record.status === "Resolved";
+
+      app.innerHTML = `
+        <button class="link-button back-button"
+          type="button" id="backBtn">
+          ← Back to Exceptions
+        </button>
+
+        <header class="page-header">
+          <p class="eyebrow">Issue Resolution Workspace</p>
+          <h1>${escapeHtml(record.id)}</h1>
+          <p class="subtext">
+            Review inventory discrepancy details,
+            document actions, and update issue status.
+          </p>
+        </header>
+
+        <div class="detail-grid">
+          <section class="card" aria-labelledby="detailHeading">
+            <h2 id="detailHeading">Discrepancy Details</h2>
+
+            <div class="detail-list">
+              <div>
+                <p class="detail-label">Item</p>
+                <p class="detail-value">
+                  ${escapeHtml(record.item)}
+                </p>
+              </div>
+              <div>
+                <p class="detail-label">SKU</p>
+                <p class="detail-value">
+                  ${escapeHtml(record.sku)}
+                </p>
+              </div>
+              <div>
+                <p class="detail-label">Location</p>
+                <p class="detail-value">
+                  ${escapeHtml(record.location)}
+                </p>
+              </div>
+              <div>
+                <p class="detail-label">Priority</p>
+                ${badge(record.priority)}
+              </div>
+              <div>
+                <p class="detail-label">Expected Quantity</p>
+                <p class="detail-value">${record.expected}</p>
+              </div>
+              <div>
+                <p class="detail-label">Actual Quantity</p>
+                <p class="detail-value">${record.actual}</p>
+              </div>
+              <div>
+                <p class="detail-label">Variance</p>
+                <p class="detail-value">
+                  ${discrepancy(record)}
+                </p>
+              </div>
+              <div>
+                <p class="detail-label">Current Status</p>
+                ${badge(record.status)}
+              </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="actionHeading">
+            <h2 id="actionHeading">
+              Investigation & Resolution
+            </h2>
+
+            <div class="field">
+              <label for="noteInput">Investigation note</label>
+              <textarea id="noteInput"
+                placeholder="Describe findings or corrective actions..."
+                ${isResolved ? "disabled" : ""}></textarea>
+            </div>
+
+            <div class="action-group">
+              <button class="btn btn-secondary"
+                type="button" id="saveNoteBtn"
+                ${isResolved ? "disabled" : ""}>
+                Save Note
+              </button>
+
+              <button class="btn btn-secondary"
+                type="button" id="reviewBtn"
+                ${isResolved ? "disabled" : ""}>
+                Mark Under Review
+              </button>
+
+              <button class="btn" type="button"
+                id="resolveBtn"
+                ${isResolved ? "disabled" : ""}>
+                Mark Resolved ✓
+              </button>
+            </div>
+
+            <p class="muted" style="font-size:.78rem">
+              A documented action is required before
+              resolving an issue.
+            </p>
+          </section>
+        </div>
+
+        <section class="card" style="margin-top:18px"
+          aria-labelledby="historyHeading">
+          <h2 id="historyHeading">
+            Investigation History
+          </h2>
+          <div id="historyList"></div>
+        </section>
+      `;
+
+      renderHistory(record);
+    }
+
+    function navigate(view, id = null) {
+      currentView = view;
+      selectedId = id;
+
+      const isOverview = view === "overview";
+
+      overviewBtn.classList.toggle("active", isOverview);
+      exceptionsBtn.classList.toggle("active", !isOverview);
+
+      if (isOverview) {
+        overviewBtn.setAttribute("aria-current", "page");
+        exceptionsBtn.removeAttribute("aria-current");
+        renderOverview();
+      } else {
+        exceptionsBtn.setAttribute("aria-current", "page");
+        overviewBtn.removeAttribute("aria-current");
+
+        if (view === "detail") renderDetail();
+        else renderExceptions();
+      }
+
+      document.querySelector("main").focus();
+    }
+
+    overviewBtn.addEventListener("click", () => {
+      navigate("overview");
+      setAnnouncement("");
+    });
+
+    exceptionsBtn.addEventListener("click", () => {
+      navigate("exceptions");
+      setAnnouncement("");
+    });
+
+    app.addEventListener("click", event => {
+      const button = event.target.closest("button");
+      if (!button) return;
+
+      if (button.id === "viewAllBtn" ||
+          button.id === "backBtn") {
+        navigate("exceptions");
+        setAnnouncement("");
+        return;
+      }
+
+      if (button.dataset.open) {
+        navigate("detail", button.dataset.open);
+        setAnnouncement("");
+        return;
+      }
+
+      const record = records.find(r => r.id === selectedId);
+      if (!record || record.status === "Resolved") return;
+
+      if (button.id === "saveNoteBtn") {
+        const input = document.getElementById("noteInput");
+        const note = input.value.trim();
+
+        if (!note) {
+          setAnnouncement(
+            "Enter an investigation note before saving."
+          );
+          input.focus();
+          return;
+        }
+
+        record.notes.push(note);
+        saveRecords();
+
+        input.value = "";
+        renderHistory(record);
+
+        setAnnouncement(
+          "Investigation note saved" +
+          (persistenceAvailable ?
+            " in this browser." : " for this session.")
+        );
+      }
+
+      if (button.id === "reviewBtn") {
+        const input = document.getElementById("noteInput");
+
+        if (input && input.value.trim()) {
+          setAnnouncement(
+            "Save your investigation note before changing status."
+          );
+          input.focus();
+          return;
+        }
+
+        record.status = "Under Review";
+        saveRecords();
+        renderDetail();
+
+        setAnnouncement(
+          "Issue status updated to Under Review."
+        );
+      }
+
+      if (button.id === "resolveBtn") {
+        const input = document.getElementById("noteInput");
+        const pendingNote = input.value.trim();
+
+        if (!pendingNote && record.notes.length === 0) {
+          setAnnouncement(
+            "Document an investigation action before resolving."
+          );
+          input.focus();
+          return;
+        }
+
+        if (pendingNote) {
+          record.notes.push(pendingNote);
+        }
+
+        record.status = "Resolved";
+        saveRecords();
+        renderDetail();
+
+        setAnnouncement("Issue marked as resolved.");
+      }
+    });
+
+    app.addEventListener("input", event => {
+      if (event.target.id === "searchInput") {
+        searchTerm = event.target.value;
+        updateFilteredTable();
+      }
+    });
+
+    app.addEventListener("change", event => {
+      if (event.target.id === "prioritySelect") {
+        priorityFilter = event.target.value;
+        updateFilteredTable();
+      }
+
+      if (event.target.id === "statusSelect") {
+        statusFilter = event.target.value;
+        updateFilteredTable();
+      }
+    });
+
+    document.getElementById("resetBtn")
+      .addEventListener("click", () => resetDialog.showModal());
+
+    document.getElementById("cancelResetBtn")
+      .addEventListener("click", () => resetDialog.close());
+
+    document.getElementById("confirmResetBtn")
+      .addEventListener("click", resetRecords);
+
+    loadRecords();
+    updateStorageMessage();
+    navigate("overview");
+  </script>
+</body>
+</html>
